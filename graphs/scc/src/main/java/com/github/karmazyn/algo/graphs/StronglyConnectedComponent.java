@@ -12,9 +12,7 @@ import java.util.stream.Collectors;
 public class StronglyConnectedComponent {
 
     public List<Integer> sccs(Graph g) {
-        System.out.println("Start");
         g.revert();
-        System.out.println("Reverted");
 
         AtomicInteger counter = new AtomicInteger(0);
         g.getNodes().forEach(node -> {
@@ -22,30 +20,20 @@ public class StronglyConnectedComponent {
                 stackDfs(g, node, counter);
             }
         });
-        System.out.println("Out of DFS");
 
         g.paintWhite();
 
-        System.out.println("Painted white");
-
         g.revert();
-        System.out.println("Reverted");
 
         List<Graph.Node> nodes = sortByTime(g);
-        System.out.println("Sorted by time");
-        System.out.println(nodes.get(0));
-
 
         System.gc();
         nodes.forEach(node -> {
             if (node.getColor().equals(Graph.Color.WHITE)) stackDfs(g, node, counter);
         });
-        System.out.println("Out of DFS");
 
         Map<Integer, List<Graph.Node>> leaders = getLeaders(g);
-        System.out.println("Prepared leaders list");
         List<Integer> sortedLeaders = leaders.values().stream().mapToInt(list -> list.size()).sorted().boxed().collect(Collectors.toList());
-        System.out.println("Sorted leaders in asc order");
         return sortedLeaders.stream().sorted((i1, i2) -> Integer.compare(i2, i1)).limit(5).collect(Collectors.toList());
     }
 
